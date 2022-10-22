@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>D2Mug - Data To Mug Cup GCode Generator</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/pico.min.css">
+    <link rel="stylesheet" href="./css/custom.css">
+    <script src="./js/gcode-viewer.js"></script>
+</head>
+
+<body>
+
+    <nav class="container-fluid">
+        <ul>
+            <li><a href="#" onclick="toggle('data')">Data</a></li>|
+            <li><a href="#" onclick="toggle('program')">Program</a></li>|
+            <li><a href="#" onclick="toggle('gcode')">GCode</a></li>
+        </ul>
+        <ul>
+            <li><a href="#" onclick="doRender(false)">Re-Render</a></li>
+            <li><a href="#" onclick="doRender()">Re-Render (Full)</a></li>
+        </ul>
+        <ul>
+            <li>
+                <details role="list" dir="rtl">
+                    <summary aria-haspopup="listbox" role="link" class="secondary">Examples</summary>
+                    <ul role="listbox">
+                        <!-- <li><a href="#">Simple Sylinder Example</a></li> -->
+                        <li><a href="#" onclick="loadExample('cube')">Simple Cube Example</a></li>
+                        <li><a href="#" onclick="loadExample('global-temp')">Global Temperature last 140 years</a></li>
+                        <!-- <li><a href="#">Thelonious Monk - Straight No Chaser</a></li>
+                        <li><a href="#">Chopin - Mazurka Op. 17 no. 3 in A flat major</a></li> -->
+                    </ul>
+                </details>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="grid">
+                <form>
+                    <textarea id="data" placeholder="Enter CSV or try our sample" onkeyup="doRender()"></textarea>
+                    <textarea id="program" placeholder="Enter Javascript or try our sample" onkeyup="doRender()"></textarea>
+                    <textarea id="gcode" placeholder="Enter GCode or try our sample" onkeyup="doRender(false)"></textarea>
+                </form>
+            <div id="gcode-viewer"></div>
+        </div>
+    </main>
+
+    <footer class="container-fluid">
+        <small>Built by <a href="https://kiichitakeuchi.com" class="secondary">Kiichi Takeuchi</a> • <a
+                href="https://github.com/kiichi/data-to-mug-generator" class="secondary">Project Site</a></small>
+    </footer>
+
+    <script>
+        function toggle(elemId){
+            var elems = document.querySelectorAll('textarea')
+            for (let i=0; i<elems.length; i++){
+                if (elems[i].id == elemId){
+                    elems[i].style.display = 'block'
+                }
+                else {
+                    elems[i].style.display = 'none'
+                }
+            }
+
+        }
+        function doRender(force = true){
+            const data = document.getElementById('data').value
+            const program = document.getElementById('program').value
+            const srcElem = document.getElementById('gcode')
+            let gcode = srcElem.value
+            if (force && (data || program)){
+                console.log('full gen')
+                const conv = new Function('data', program);
+                const retArr = conv(data);
+                gcode = buildGCode(retArr)
+                srcElem.value = gcode
+            }
+            render(gcode)
+        }
+        function render(gcode){
+            const renderer = new gcodeViewer.GCodeRenderer(gcode, 740, 800, new gcodeViewer.Color(0x808080))
+            document.getElementById("gcode-viewer").innerHTML = ''
+            document.getElementById("gcode-viewer").append(renderer.element())
+            renderer.render().then(() => console.log("rendering finished"))
+        }
+        function buildGCode(arr){
+            let tmpArr = [];
+            for (var i=0; i<arr.length; i++) {
+                let x = arr[i].X
+                let y = arr[i].Y
+                let z = arr[i].Z
+                let e = arr[i].E
+                tmpArr.push(`G1 X${x.toFixed(3)} Y${y.toFixed(3)} Z${z.toFixed(3)} E${e.toFixed(3)}`)
+            }
+            let template = 
+            `
+M105
+M109 S0
+M82 ;absolute extrusion mode
+G28 ;Home
+G1 Z15.0 F6000 ;Move the platform down 15mm
+;Prime the extruder
+G92 E0
+G1 F2000 E0
+M106 S255
+; Movement Start ===============
+${tmpArr.join('\n')}
+; Movement End ===============
+M107
+M104 S0
+M140 S0
+;Retract the filament
+G92 E1
+G1 E-1 F300
+G28 X0 Y0
+M84
+M82 ;absolute extrusion mode
+;End of Gcode
+`
+            
+            return template
+        }
+        function loadExample(example){
+            Promise.all([
+                fetch(`./examples/${example}/data.csv`).then(res=>res.text()),
+                fetch(`./examples/${example}/program.js`).then(res=>res.text()),
+                fetch(`./examples/${example}/model.gcode`).then(res=>res.text()),
+            ]).then(([data, program, gcode]) => {
+                document.getElementById('data').value = data
+                document.getElementById('program').value = program
+                document.getElementById('gcode').value = gcode
+                doRender()
+            }).catch((err) => {
+                console.error(err);
+            })
+        }
+
+        loadExample('global-temp')
+
+        // fetch('./examples/global-temp/global-temp-compiled-test.gcode')
+        //     .then((res) => res.text())
+        //     .then((gcode) => {
+        //         const srcElem = document.getElementById('gcode')
+        //         srcElem.value = gcode
+        //         render(gcode)
+        //     })
+    </script>
+</body>
+
+</html>

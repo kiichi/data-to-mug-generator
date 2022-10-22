@@ -1,0 +1,18 @@
+body {
+    overflow-y: hidden; /* Hide vertical scrollbar */
+}
+
+.container{
+    margin:0px;
+    padding:0px;
+    max-width: 100%;
+}
+
+textarea {
+    font-size:0.7em;
+    height:800px;
+}
+
+#program, #gcode {
+    display: none;
+}
