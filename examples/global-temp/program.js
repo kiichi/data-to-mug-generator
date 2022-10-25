@@ -2,7 +2,6 @@ var zd = 0.5/12.0; // z-axis increment 0.5 mm height 12 steps to complete each c
 var ed = 3.0; // extrusion
 var z = 1.0; // should be zero?
 var e = 0;
-var arr = [];
 var retArr = [];
 var converted = data.split('\n')
                 .filter(item=>item.indexOf('GISTEMP')>-1)
@@ -16,6 +15,5 @@ for (var i=0; i<converted.length; i++) {
     z = z+zd;
     e = e+ed;
     retArr.push({"X":x, "Y":y, "Z":z,"E":e}); // do we need e
-    arr.push(`G1 X${x.toFixed(3)} Y${y.toFixed(3)} Z${z.toFixed(3)} E${e.toFixed(3)}`);
 }
 return retArr;

@@ -90,11 +90,16 @@
         function buildGCode(arr){
             let tmpArr = [];
             for (var i=0; i<arr.length; i++) {
-                let x = arr[i].X
-                let y = arr[i].Y
-                let z = arr[i].Z
-                let e = arr[i].E
-                tmpArr.push(`G1 X${x.toFixed(3)} Y${y.toFixed(3)} Z${z.toFixed(3)} E${e.toFixed(3)}`)
+				if (arr[i].Comment){
+					tmpArr.push(arr[i].Comment);
+				}
+				else {
+					let x = arr[i].X
+					let y = arr[i].Y
+					let z = arr[i].Z
+					let e = arr[i].E
+					tmpArr.push(`G1 X${x.toFixed(3)} Y${y.toFixed(3)} Z${z.toFixed(3)} E${e.toFixed(3)}`)
+				}
             }
             let template = 
             `
@@ -139,8 +144,8 @@ M82 ;absolute extrusion mode
             })
         }
 
-        loadExample('global-temp')
-        //loadExample('theloneous-monk')
+        //loadExample('global-temp')
+        loadExample('theloneous-monk')
         //loadExample('chopin')
 
         // fetch('./examples/global-temp/global-temp-compiled-test.gcode')
