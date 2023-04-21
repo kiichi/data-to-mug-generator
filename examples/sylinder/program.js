@@ -1,4 +1,4 @@
-var div = 4;
+var div = 20.0
 var e = 1; // extrusion
 var ed = 1; // extrusion step
 var z = 0; // initial should be zero?

@@ -27,11 +27,12 @@
                 <details role="list" dir="rtl">
                     <summary aria-haspopup="listbox" role="link" class="secondary">Examples</summary>
                     <ul role="listbox">
-                        <!-- <li><a href="#">Simple Sylinder Example</a></li> -->
-                        <li><a href="#" onclick="loadExample('cube')">Simple Cube Example</a></li>
+                        <li><a href="#" onclick="loadExample('cube')">Cube</a></li>
+                        <li><a href="#" onclick="loadExample('sylinder')">Sylinder</a></li>
                         <li><a href="#" onclick="loadExample('global-temp')">Global Temperature last 140 years</a></li>
-                        <!-- <li><a href="#">Thelonious Monk - Straight No Chaser</a></li>
-                        <li><a href="#">Chopin - Mazurka Op. 17 no. 3 in A flat major</a></li> -->
+                        <li><a href="#" onclick="loadExample('theloneous-monk')">Thelonious Monk - Straight No Chaser</a></li>
+                        <li><a href="#" onclick="loadExample('anagama')">Anagama Firing Temperature Log</a></li>
+                        <!-- <li><a href="#" onclick="loadExample('chopin')">Chopin - Mazurka Op. 17 no. 3 in A flat major</a></li> -->
                     </ul>
                 </details>
             </li>
@@ -144,17 +145,12 @@ M82 ;absolute extrusion mode
             })
         }
 
+        //loadExample('cube')
+        //loadExample('sylinder')
         //loadExample('global-temp')
-        loadExample('theloneous-monk')
+        //loadExample('theloneous-monk')
         //loadExample('chopin')
-
-        // fetch('./examples/global-temp/global-temp-compiled-test.gcode')
-        //     .then((res) => res.text())
-        //     .then((gcode) => {
-        //         const srcElem = document.getElementById('gcode')
-        //         srcElem.value = gcode
-        //         render(gcode)
-        //     })
+        loadExample('anagama')
     </script>
 </body>
 
