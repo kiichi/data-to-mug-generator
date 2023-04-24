@@ -1,20 +1,22 @@
-var div = 60.0
+var div = 7.0
 var e = 1; // extrusion
 var ed = 1; // extrusion step
 var z = 0; // initial should be zero?
 var zd = 0.5/div; // z-axis increment 0.5 mm height N angle to complete each circle
-var diameter = 10;
-var factor = 0.03;
+var diameter = 15;
+var factor = 0.3;
 var offset = 100; // offset from edge, should be half of box
-var colIndex = 3; // col 3 = p1, col 4 = p2
+var colIndex = 5; //
 var vstretch = 2; // vertical stretch
 var retArr = [];
 
-// vartically streth - multiply N layers of original one layer contains data points (div)
-// to repeat  (x rep to stretch)
-// e.g. 
-// -- take original array which contains 60 data points per layer, stretch x10
-// streatch(arr, 60, 10); 
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
+
+
 function extend(arr, n, rep){
 	var expanded = [];
 	for (var i=0; i<arr.length-n-1; i+=n){
@@ -43,30 +45,43 @@ function smoothOut (vector, variance) {
 	return ret;
 }
 
-// var converted = data.split('\n')
-//                 .map((line)=>{ 
-// 					var parts = line.split(',')
-// 					return [parseInt(parts[3]),parseInt(parts[4])];
-// 				});
-
+// aggregate per day
 var converted = data.split('\n')
-	.splice(1)
+	.splice(1,2130)
 	.map((line)=>{ 
-		var parts = line.split(',')
-		return parseInt(parts[colIndex]);
-	});
+		var parts = line.split(',');
+		return [parseFloat(parts[colIndex]), (new Date(parts[1])).toISOString().split('T')[0]];
+	}); // cut bottom after 2021 no energy data though
 
-//console.log(converted);
-converted = smoothOut(converted,0.6);
-converted = extend(converted, div, vstretch);
+var results = [];
+var first = new Date(converted[0][1]);
+var last = new Date(converted[converted.length-1][1]);
+for (var dt = first; dt <= last; dt = dt.addDays(1)){
+	results[dt.toISOString().split('T')[0]] = 0;
+}
 
-//converted = stretch(converted, div, 1);
+for (var i=0; i<converted.length; i++){	
+	var key = converted[i][1];
+	var val = converted[i][0];
+	results[key] += val;
+}
 
-//console.log(converted);
+var keys = Object.keys(results);
+keys = keys.sort();
 
-for (var i=1; i<converted.length; i++) {
-		//var val = converted[i][0];
-		var val = converted[i];
+console.log(keys)
+
+var res2 = [];
+for (var i=1; i<keys.length; i++) {
+	var val = results[keys[i]];
+	res2.push(val);
+}
+
+//res2 = smoothOut(res2,0.1);
+//res2 = extend(res2, div, vstretch);
+
+for (var i=1; i<res2.length; i++) {
+		var val = res2[i];
 		var modifier = val*factor;
         var resizedDiameter = diameter + modifier;
 		var x = offset + resizedDiameter * Math.cos(i*2*Math.PI/div);

@@ -30,9 +30,16 @@
                         <li><a href="#" onclick="loadExample('cube')">Cube</a></li>
                         <li><a href="#" onclick="loadExample('sylinder')">Sylinder</a></li>
                         <li><a href="#" onclick="loadExample('global-temp')">Global Temperature last 140 years</a></li>
-                        <li><a href="#" onclick="loadExample('theloneous-monk')">Thelonious Monk - Straight No Chaser</a></li>
                         <li><a href="#" onclick="loadExample('anagama')">Anagama Firing Temperature Log</a></li>
-                        <!-- <li><a href="#" onclick="loadExample('chopin')">Chopin - Mazurka Op. 17 no. 3 in A flat major</a></li> -->
+                        <li><a href="#" onclick="loadExample('anagama-cross-section')">Anagama Firing Temperature Log as Corss Section</a></li>
+                        <li><a href="#" onclick="loadExample('glaciers')">Glaciers Data last 60 years</a></li>
+                        <li><a href="#" onclick="loadExample('ev')">My EV Usage Data last 2 years</a></li>
+                        <li>-- In Progress Below --</li>
+                        <li><a href="#" onclick="loadExample('co2')">CO2 data last 60 years</a></li>
+                        <li><a href="#" onclick="loadExample('theloneous-monk')">Thelonious Monk - Straight No Chaser</a></li>
+                        <li><a href="#" onclick="loadExample('chopin')">Chopin - Mazurka Op. 17 no. 3 in A flat major</a></li>
+                        <li><a href="#" onclick="loadExample('steps')">My Steps 365 days</a></li>
+                        <li><a href="#" onclick="loadExample('steps')">My Distance 365 days</a></li>
                     </ul>
                 </details>
             </li>
@@ -103,8 +110,7 @@
 				}
             }
             let template = 
-            `
-M105
+            `M105
 M109 S0
 M82 ;absolute extrusion mode
 G28 ;Home
@@ -150,7 +156,11 @@ M82 ;absolute extrusion mode
         //loadExample('global-temp')
         //loadExample('theloneous-monk')
         //loadExample('chopin')
-        loadExample('anagama')
+        //loadExample('anagama')
+        //loadExample('glaciers')
+        //loadExample('co2')
+        //loadExample('ev')
+        loadExample('anagama-dish')
     </script>
 </body>
 
