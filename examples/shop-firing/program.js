@@ -1,4 +1,4 @@
-var div = 60.0
+var div = 30.0
 var e = 1; // extrusion
 var ed = 1; // extrusion step
 var z = 0; // initial should be zero?
@@ -7,7 +7,7 @@ var diameter = 10;
 var factor = 0.03;
 var offset = 100; // offset from edge, should be half of box
 var colIndex = 2; // col 2
-var vstretch = 5; // vertical stretch
+var vstretch = 2; // vertical stretch
 var retArr = [];
 
 // vartically streth - multiply N layers of original one layer contains data points (div)
@@ -59,8 +59,6 @@ var converted = data.split('\n')
 //console.log(converted);
 converted = smoothOut(converted,0.6);
 converted = extend(converted, div, vstretch);
-
-//converted = stretch(converted, div, 1);
 
 //console.log(converted);
 

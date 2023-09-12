@@ -1,13 +1,13 @@
-var div = 60.0
+var div = 30.0
 var e = 1; // extrusion
-var ed = 0.6; // extrusion step
+var ed = 0.8; // extrusion step
 var z = 0; // initial should be zero?
 var zd = 0.5/div; // z-axis increment 0.5 mm height N angle to complete each circle
 var diameter = 10;
 var factor = 0.02;
 var offset = 100; // offset from edge, should be half of box
 var colIndex = 3; // col 3 = p1, col 4 = p2
-var vstretch = 5; // vertical stretch
+var vstretch = 3; // vertical stretch
 var retArr = [];
 
 // vartically streth - multiply N layers of original one layer contains data points (div)
@@ -60,14 +60,12 @@ var converted = data.split('\n')
 converted = smoothOut(converted,0.6);
 converted = extend(converted, div, vstretch);
 
-//converted = stretch(converted, div, 1);
-
 //console.log(converted);
 
 for (var i=1; i<converted.length; i++) {
 		//var val = converted[i][0];
 		var val = converted[i];
-		var modifier = val*factor;
+		var modifier =  val*factor;
         var resizedDiameter = diameter + modifier;
 		var x = offset + resizedDiameter * Math.cos(i*2*Math.PI/div);
 		var y = offset + resizedDiameter * Math.sin(i*2*Math.PI/div);
