@@ -54,7 +54,7 @@ var converted = data.split('\n')
 	.map((line)=>{ 
 		var parts = line.split(',')
 		return parseInt(parts[colIndex]);
-	});
+	}).reverse();
 
 //console.log(converted);
 converted = smoothOut(converted,0.6);

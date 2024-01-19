@@ -36,6 +36,7 @@
                         <li><a href="#" onclick="loadExample('shop-firing')">Shop Firing Temperature Log by Robert Boryk</a></li>
                         <li><a href="#" onclick="loadExample('glaciers')">Glaciers Data last 60 years</a></li>
                         <li><a href="#" onclick="loadExample('ev')">My EV Usage Data last 2 years</a></li>
+                        <li><a href="#" onclick="loadExample('revolution')">Issued Bond during Revolutionary War</a></li>
                         <li>-- In Progress Below --</li>
                         <li><a href="#" onclick="loadExample('co2')">CO2 data last 60 years</a></li>
                         <li><a href="#" onclick="loadExample('theloneous-monk')">Thelonious Monk - Straight No Chaser</a></li>
@@ -83,7 +84,6 @@
             const srcElem = document.getElementById('gcode')
             let gcode = srcElem.value
             if (force && (data || program)){
-                console.log('full gen')
                 const conv = new Function('data', program);
                 const retArr = conv(data);
                 gcode = buildGCode(retArr)
@@ -163,8 +163,9 @@ M82 ;absolute extrusion mode
         //loadExample('co2')
         //loadExample('ev')
         //loadExample('anagama-dish')
-        loadExample('iga-firing')
         //loadExample('shop-firing')
+        //loadExample('iga-firing')
+        loadExample('revolution')
     </script>
 </body>
 
