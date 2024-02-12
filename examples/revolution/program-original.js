@@ -1,6 +1,6 @@
-var div = 10
-var e = 0; // initial extrusion
-var ed = 10; // extrusion step (default 1)
+var div = 12.0
+var e = 1; // extrusion
+var ed = 1; // extrusion step
 var z = 0; // initial should be zero?
 var zd = 0.5/div; // z-axis increment 0.5 mm height N angle to complete each circle
 var diameter = 30; // 30 for small cup 50 for tall vase
@@ -8,7 +8,7 @@ var factor = 0.00001; // scale the original value
 var offset = 255/2; // offset from edge, should be half of box e.g Tronxy Moore 2 is 255mm box
 var colIndex = 1; // col 3 = p1, col 4 = p2
 var vstretch = 2; // vertical stretch - 2 for small cup 4 for tall vase
-var twist = 0.0005;//
+var twist = 0.001;//
 var retArr = [];
 
 // simply expand between two datapoints
@@ -135,8 +135,7 @@ converted = converted.reverse();
 for (var i=1; i<converted.length; i++) {
 		var val = converted[i];
 		var modifier = val*factor;
-        var sign = (i % 2) ? 1 : 0.01; 
-        var resizedDiameter = diameter * 2+ sign * modifier;
+        var resizedDiameter = diameter + modifier;
 		var x = offset + resizedDiameter * Math.cos(i*2*Math.PI/div + (i*twist));
 		//var y = offset + resizedDiameter * Math.sin(i*2*Math.PI/div + (i*0.001*0.001)); // flat twist
 		var y = offset + resizedDiameter * Math.sin(i*2*Math.PI/div + (i*twist));
