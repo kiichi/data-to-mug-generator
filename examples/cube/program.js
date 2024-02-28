@@ -1,6 +1,6 @@
 var div = 4;
 var e = 1; // extrusion
-var ed = 1; // extrusion step
+var ed = 5; // extrusion step
 var z = 0; // initial should be zero?
 var zd = 0.5/div; // z-axis increment 0.5 mm height N angle to complete each circle
 var diameter = 40;

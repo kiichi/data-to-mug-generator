@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>D2Mug - Data To Mug Cup GCode Generator</title>
+    <title>Data2Cup.com - Convert Spreadsheet Data to 3-D printable cup!</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./css/pico.min.css">
@@ -11,12 +11,11 @@
 </head>
 
 <body>
-
     <nav class="container-fluid">
         <ul>
             <li><a href="#" onclick="toggle('data')">Data</a></li>|
             <li><a href="#" onclick="toggle('program')">Program</a></li>|
-            <li><a href="#" onclick="toggle('gcode')">GCode</a></li>
+            <li><a href="#" onclick="toggle('gcode')">G-Code</a> (<a href="#" onclick="saveGcode()" data-placement="bottom" data-tooltip="Download">⬇️</a>)</li>
         </ul>
         <ul>
             <li><a href="#" onclick="doRender(false)">Re-Render</a></li>
@@ -25,24 +24,24 @@
         <ul>
             <li>
                 <details role="list" dir="rtl">
-                    <summary aria-haspopup="listbox" role="link" class="secondary">Examples</summary>
+                    <summary id="summary" aria-haspopup="listbox" role="link" class="secondary">Examples -- Please Select --</summary>
                     <ul role="listbox">
-                        <li><a href="#" onclick="loadExample('cube')">Cube</a></li>
-                        <li><a href="#" onclick="loadExample('sylinder')">Sylinder</a></li>
-                        <li><a href="#" onclick="loadExample('global-temp')">Global Temperature last 140 years</a></li>
-                        <li><a href="#" onclick="loadExample('anagama')">Anagama Firing Temperature Log by Trev and Mike</a></li>
-                        <li><a href="#" onclick="loadExample('anagama-dish')">Anagama Firing Temperature Log as Dish  by Trev and Mike</a></li>
-                        <li><a href="#" onclick="loadExample('iga-firing')">Iga Firing Temperature Log by Rob</a></li>
-                        <li><a href="#" onclick="loadExample('shop-firing')">Shop Firing Temperature Log by Rob</a></li>
-                        <li><a href="#" onclick="loadExample('glaciers')">Glaciers Data last 60 years</a></li>
-                        <li><a href="#" onclick="loadExample('ev')">Tesla EV Usage Data last 2.5 years</a></li>
-                        <li><a href="#" onclick="loadExample('revolution')">Bond during Revolutionary War</a></li>
+                        <li><a href="#" onclick="loadExample('sandbox',this)">Sandbox (G-Code Preview)</a></li>
+                        <li><a href="#" onclick="loadExample('cube',this)">Cube</a></li>
+                        <li><a href="#" onclick="loadExample('sylinder',this)">Sylinder</a></li>
+                        <li><a href="#" onclick="loadExample('global-temp',this)">Global Temperature last 140 years</a></li>
+                        <li><a href="#" onclick="loadExample('anagama',this)">Wood Firing Temperature Data by Trev and Mike</a></li>
+                        <li><a href="#" onclick="loadExample('anagama-dish',this)">Wood Firing Temperature Data as Dish by Trev and Mike</a></li>
+                        <li><a href="#" onclick="loadExample('iga-firing',this)">Wood Firing Temperature Data by Rob</a></li>
+                        <!-- <li><a href="#" onclick="loadExample('shop-firing',this)">Shop Firing Temperature Log by Rob</a></li> -->
+                        <li><a href="#" onclick="loadExample('glaciers',this)">Glaciers Data last 60 years</a></li>
+                        <li><a href="#" onclick="loadExample('ev',this)">Tesla EV Usage Data last 2.5 years</a></li>
+                        <li><a href="#" onclick="loadExample('revolution',this)">Bond during Revolutionary War</a></li>
                         <li>-- In Progress Below --</li>
-                        <li><a href="#" onclick="loadExample('co2')">CO2 data last 60 years</a></li>
-                        <li><a href="#" onclick="loadExample('theloneous-monk')">Thelonious Monk - Straight No Chaser</a></li>
-                        <li><a href="#" onclick="loadExample('chopin')">Chopin - Mazurka Op. 17 no. 3 in A flat major</a></li>
-                        <li><a href="#" onclick="loadExample('steps')">My Steps 365 days</a></li>
-                        <li><a href="#" onclick="loadExample('steps')">My Distance 365 days</a></li>
+                        <li><a href="#" onclick="loadExample('co2',this)">CO2 data last 60 years</a></li>
+                        <li><a href="#" onclick="loadExample('theloneous-monk',this)">Thelonious Monk - Straight No Chaser</a></li>
+                        <li><a href="#" onclick="loadExample('chopin',this)">Chopin - Mazurka Op. 17 no. 3 in A flat major</a></li>
+                        <li><a href="#" onclick="loadExample('steps',this)">My Steps 365 days</a></li>
                     </ul>
                 </details>
             </li>
@@ -138,7 +137,7 @@ M82 ;absolute extrusion mode
             
             return template
         }
-        function loadExample(example){
+        function loadExample(example,elem){
             Promise.all([
                 fetch(`./examples/${example}/data.csv`).then(res=>res.text()),
                 fetch(`./examples/${example}/program.js`).then(res=>res.text()),
@@ -147,10 +146,27 @@ M82 ;absolute extrusion mode
                 document.getElementById('data').value = data
                 document.getElementById('program').value = program
                 document.getElementById('gcode').value = gcode
+                if (elem){
+                    document.getElementById('summary').innerHTML = elem.innerHTML;
+                }
                 doRender()
             }).catch((err) => {
                 console.error(err);
             })
+        }
+
+        function saveGcode() {
+            var filename = document.getElementById('summary').innerText+'.gcode';
+            var text = document.getElementById('gcode').value;
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
         }
 
         //loadExample('cube')
