@@ -12,49 +12,46 @@
 
 <body>
     <nav class="container-fluid">
-        <ul>
+        <ul id="stage">
             <li><a href="#" onclick="toggle('data')">Data</a></li>|
             <li><a href="#" onclick="toggle('program')">Program</a></li>|
             <li><a href="#" onclick="toggle('gcode')">G-Code</a> (<a href="#" onclick="saveGcode()" data-placement="bottom" data-tooltip="Download">⬇️</a>)</li>
         </ul>
-        <ul>
+        <ul id="action">
             <li><a href="#" onclick="doRender(false)">Re-Render</a></li>
             <li><a href="#" onclick="doRender()">Re-Render (Full)</a></li>
         </ul>
-        <ul>
-            <li>
-                <details role="list" dir="rtl">
-                    <summary id="summary" aria-haspopup="listbox" role="link" class="secondary">Examples -- Please Select --</summary>
-                    <ul role="listbox">
-                        <li><a href="#" onclick="loadExample('sandbox',this)">Sandbox (G-Code Preview)</a></li>
-                        <li><a href="#" onclick="loadExample('cube',this)">Cube</a></li>
-                        <li><a href="#" onclick="loadExample('sylinder',this)">Sylinder</a></li>
-                        <li><a href="#" onclick="loadExample('global-temp',this)">Global Temperature last 140 years</a></li>
-                        <li><a href="#" onclick="loadExample('anagama',this)">Wood Firing Temperature Data by Trev and Mike</a></li>
-                        <li><a href="#" onclick="loadExample('anagama-dish',this)">Wood Firing Temperature Data as Dish by Trev and Mike</a></li>
-                        <li><a href="#" onclick="loadExample('iga-firing',this)">Wood Firing Temperature Data by Rob</a></li>
-                        <!-- <li><a href="#" onclick="loadExample('shop-firing',this)">Shop Firing Temperature Log by Rob</a></li> -->
-                        <li><a href="#" onclick="loadExample('glaciers',this)">Glaciers Data last 60 years</a></li>
-                        <li><a href="#" onclick="loadExample('ev',this)">Tesla EV Usage Data last 2.5 years</a></li>
-                        <li><a href="#" onclick="loadExample('revolution',this)">Bond during Revolutionary War</a></li>
-                        <li>-- In Progress Below --</li>
-                        <li><a href="#" onclick="loadExample('co2',this)">CO2 data last 60 years</a></li>
-                        <li><a href="#" onclick="loadExample('theloneous-monk',this)">Thelonious Monk - Straight No Chaser</a></li>
-                        <li><a href="#" onclick="loadExample('chopin',this)">Chopin - Mazurka Op. 17 no. 3 in A flat major</a></li>
-                        <li><a href="#" onclick="loadExample('steps',this)">My Steps 365 days</a></li>
-                    </ul>
-                </details>
+        <ul id="examples">
+            <li> 
+                    <select onchange="loadExample(value)">
+                        <!-- <option selected disabled value="">Select</option> -->
+                        <option value="sandbox">Sandbox (G-Code Preview)</option>
+                        <option value="cube">Cube</option>
+                        <option value="sylinder">Sylinder</option>
+                        <option value="global-temp" selected>Global Temperature last 140 years</option>
+                        <option value="anagama">Wood Firing Temperature Data by Trev and Mike</option>
+                        <option value="anagama-dish">Wood Firing Temperature Data as Dish by Trev and Mike</option>
+                        <option value="iga-firing">Wood Firing Temperature Data by Rob</option>                        
+                        <option value="glaciers">Glaciers Data last 60 years</option>
+                        <option value="ev">Tesla EV Usage Data last 2.5 years</option>
+                        <option value="revolution">Bond during Revolutionary War</option>
+                        <option disabled>-- In Progress Below --</option>
+                        <option value="co2">CO2 data last 60 years</option>
+                        <option value="theloneous-monk">Thelonious Monk - Straight No Chaser</option>
+                        <option value="chopin">Chopin - Mazurka Op. 17 no. 3 in A flat major</option>
+                        <option value="steps">My Steps 365 days</option>
+                    </select>
             </li>
         </ul>
     </nav>
 
     <main class="container">
         <div class="grid">
-                <form>
-                    <textarea id="data" placeholder="Enter CSV or try our sample" onkeyup="doRender()"></textarea>
-                    <textarea id="program" placeholder="Enter Javascript or try our sample" onkeyup="doRender()"></textarea>
-                    <textarea id="gcode" placeholder="Enter GCode or try our sample" onkeyup="doRender(false)"></textarea>
-                </form>
+            <form id="editor">
+                <textarea id="data" placeholder="Enter CSV or try our sample" onkeyup="doRender()"></textarea>
+                <textarea id="program" placeholder="Enter Javascript or try our sample" onkeyup="doRender()"></textarea>
+                <textarea id="gcode" placeholder="Enter GCode or try our sample" onkeyup="doRender(false)"></textarea>
+            </form>
             <div id="gcode-viewer"></div>
         </div>
     </main>
@@ -91,7 +88,9 @@
             render(gcode)
         }
         function render(gcode){
-            const renderer = new gcodeViewer.GCodeRenderer(gcode, 740, 800, new gcodeViewer.Color(0x808080))
+            const renderWidth = window.outerWidth < 740 ? window.outerWidth : 740
+            const renderHeight = window.outerHeight < 800 ? window.outerHeight : 800
+            const renderer = new gcodeViewer.GCodeRenderer(gcode, renderWidth, renderHeight, new gcodeViewer.Color(0x808080))
             document.getElementById("gcode-viewer").innerHTML = ''
             document.getElementById("gcode-viewer").append(renderer.element())
             renderer.render().then(() => console.log("rendering finished"))
@@ -137,7 +136,7 @@ M82 ;absolute extrusion mode
             
             return template
         }
-        function loadExample(example,elem){
+        function loadExample(example){
             Promise.all([
                 fetch(`./examples/${example}/data.csv`).then(res=>res.text()),
                 fetch(`./examples/${example}/program.js`).then(res=>res.text()),
@@ -145,10 +144,7 @@ M82 ;absolute extrusion mode
             ]).then(([data, program, gcode]) => {
                 document.getElementById('data').value = data
                 document.getElementById('program').value = program
-                document.getElementById('gcode').value = gcode
-                if (elem){
-                    document.getElementById('summary').innerHTML = elem.innerHTML;
-                }
+                document.getElementById('gcode').value = gcode                
                 doRender()
             }).catch((err) => {
                 console.error(err);
