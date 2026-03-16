@@ -6,7 +6,7 @@ var z = -zd;
 var baseRadius = 60;
 var factor = 8;
 var offset = 255 / 2;
-var twist = 0.015;
+var twist = 0.06;
 var layersPerYear = 20;
 var retArr = [];
 
