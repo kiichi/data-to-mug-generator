@@ -35,6 +35,8 @@
                         <option value="glaciers">Glaciers Data last 60 years</option>
                         <option value="ev">Tesla EV Usage Data last 2.5 years</option>
                         <option value="revolution">Bond during Revolutionary War</option>
+                        <option value="lost-ship">Slavevoyage</option>
+                        <option value="foreign-born">Foregin Born Population in US</option>
                         <option disabled>-- In Progress Below --</option>
                         <option value="co2">CO2 data last 60 years</option>
                         <option value="theloneous-monk">Thelonious Monk - Straight No Chaser</option>
@@ -97,6 +99,7 @@
         }
         function buildGCode(arr){
             let tmpArr = [];
+            let eOffset = null;
             for (var i=0; i<arr.length; i++) {
 				if (arr[i].Comment){
 					tmpArr.push(arr[i].Comment);
@@ -105,7 +108,10 @@
 					let x = arr[i].X
 					let y = arr[i].Y
 					let z = arr[i].Z
-					let e = arr[i].E
+					if (eOffset === null){
+						eOffset = arr[i].E
+					}
+					let e = arr[i].E - eOffset
 					tmpArr.push(`G1 X${x.toFixed(3)} Y${y.toFixed(3)} Z${z.toFixed(3)} E${e.toFixed(3)}`)
 				}
             }
@@ -167,7 +173,7 @@ M82 ;absolute extrusion mode
 
         //loadExample('cube')
         //loadExample('sylinder')
-        loadExample('global-temp')
+        loadExample('global-temp') // this default
         //loadExample('theloneous-monk')
         //loadExample('chopin')
         //loadExample('anagama')
@@ -178,6 +184,7 @@ M82 ;absolute extrusion mode
         //loadExample('shop-firing')
         //loadExample('iga-firing')
         //loadExample('revolution')
+        //loadExample('foreign-born')
     </script>
 </body>
 
