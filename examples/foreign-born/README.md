@@ -9,3 +9,10 @@ Source:
 
 Source URL:
 `https://foreignborncensusdata.com/statistical-tables`
+
+Other Links:
+
+- https://data.worldbank.org/indicator/SP.POP.TOTL
+- https://depts.washington.edu/moving1/NewYork.shtml
+- https://www.populationpyramids.org/
+- https://www.worldpop.org/
